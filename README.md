@@ -221,7 +221,7 @@ runner = Runner(
 
 **Why It Matters**: Users don't need to repeat their career goals in every conversation. The agent "remembers" previous discussions and builds on them.
 
-**Code Location**: `ai-agent.ipynb` (Section 3) + `helpers.py:37-59`
+**Code Location**: `ai-agent.ipynb` (Section 3)
 
 ---
 
@@ -244,7 +244,7 @@ research_agent = LlmAgent(
 
 **Why It Matters**: Eliminates manual memory management. Every research session is automatically saved for future reference without requiring explicit code in the agent logic.
 
-**Code Location**: `helpers.py:37-59`, used in `ai-agent.ipynb` (Section 2)
+**Code Location**: `ai-agent.ipynb` (Section 2)
 
 ---
 
@@ -291,7 +291,7 @@ model = Gemini(model="gemini-2.5-flash-lite", retry_options=retry_config)
 
 **Why It Matters**: Handles API rate limits, transient failures, and network issues without crashing. Production-grade reliability from day one.
 
-**Code Location**: `helpers.py:25-30`
+**Code Location**: `ai-agent.ipynb` (Section 1)
 
 ---
 
@@ -300,11 +300,10 @@ model = Gemini(model="gemini-2.5-flash-lite", retry_options=retry_config)
 ### Prerequisites
 
 - **Python 3.10+** (Python 3.11 recommended)
-- **uv** package manager ([installation guide](https://github.com/astral-sh/uv))
 - **Google API Key** for Gemini models ([get one here](https://aistudio.google.com/apikey))
 - **Jupyter** environment (VS Code, JupyterLab, or Google Colab)
 
-### Step-by-Step Setup
+### Quick Start (Recommended)
 
 #### 1. Clone the Repository
 
@@ -313,9 +312,47 @@ git clone https://github.com/YOUR_USERNAME/ai-agent.git
 cd ai-agent
 ```
 
+#### 2. Run Setup
+
+Use the provided Makefile for automated setup:
+
+```bash
+make setup
+```
+
+This will:
+- Install `uv` package manager (if not already installed)
+- Install all dependencies via `uv sync`
+- Verify your `.env` file exists and is configured
+
+#### 3. Configure API Key
+
+Edit the `.env` file and add your Google API key:
+
+```env
+GOOGLE_API_KEY=your_api_key_here
+```
+
+**⚠️ Security Note**: Never commit `.env` files to version control. The `.gitignore` is already configured to exclude them.
+
+#### 4. Start Jupyter Lab
+
+```bash
+make jupyter
+```
+
+### Manual Setup (Alternative)
+
+If you prefer manual installation:
+
+#### 1. Install uv Package Manager
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
 #### 2. Install Dependencies
 
-Using `uv` (recommended):
 ```bash
 uv sync
 ```
@@ -332,19 +369,7 @@ pip install -e .
 
 #### 3. Configure Environment Variables
 
-Create a `.env` file in the project root:
-
-```bash
-touch .env
-```
-
-Add your Google API key:
-
-```env
-GOOGLE_API_KEY=your_api_key_here
-```
-
-**⚠️ Security Note**: Never commit `.env` files to version control. The `.gitignore` is already configured to exclude them.
+Create a `.env` file and add your Google API key as shown above.
 
 #### 4. Open the Notebook
 
@@ -359,7 +384,7 @@ jupyter lab ai-agent.ipynb
 ```
 
 **Google Colab**:
-1. Upload `ai-agent.ipynb` and `helpers.py`
+1. Upload `ai-agent.ipynb`
 2. Install dependencies in a cell: `!pip install google-genai google-adk python-dotenv`
 3. Configure secrets using Colab's secrets manager
 
@@ -443,14 +468,13 @@ Your query should include:
 
 ```
 ai-agent/
-├── ai-agent.ipynb           # Main career advisor notebook
-├── helpers.py               # Utility functions and configuration
+├── ai-agent.ipynb           # Main career advisor notebook (includes all agent logic)
 ├── pyproject.toml           # Project dependencies and metadata
 ├── uv.lock                  # Locked dependency versions
 ├── .env                     # API keys (not in git)
 ├── .gitignore              # Git exclusions
 ├── README.md               # This file
-├── Makefile                # Development commands
+├── Makefile                # Environment setup commands
 └── labs/                   # Course lab notebooks
     ├── day1/               # Agent architectures
     ├── day2/               # Tool integration
@@ -502,7 +526,7 @@ Both agents use carefully structured prompts:
 
 ### Session Management
 
-The `run_session` helper function (`helpers.py:66-167`):
+The `run_session` helper function (defined in `ai-agent.ipynb`):
 - Creates or retrieves sessions by name
 - Handles query streaming
 - Filters agent outputs based on `last_agent_only` flag
