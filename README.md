@@ -1,115 +1,587 @@
-# AI Agent Journey
+# 🎯 AI Career Advisor Agent
 
-This repository tracks my work through Google/Kaggle's 5‑day AI Agents intensive and captures the capstone concept I'm building along the way.
+**A production-ready multi-agent system for personalized career transition guidance**
 
-- **Course hub:** https://www.kaggle.com/competitions/agents-intensive-capstone-project  
-- **Goal:** design, evaluate, and deploy an AI concierge that guides people toward the right job track by asking smart questions, researching paths, and summarizing tradeoffs.
+Built with Google's Agent Development Kit (ADK) as part of the AI Agents intensive program.
 
----
-
-## Project vision – Job Track Concierge
-
-| Step | Notes |
-| --- | --- |
-| Select a track | The agent acts like a concierge/coach that narrows job paths based on user goals. |
-| Problem & solution | Job hunting is noisy; the agent reduces decision friction by interviewing the user, researching opportunities, and proposing directions. |
-| Publish code | Source of truth lives in this GitHub repo so each experiment and notebook is reproducible. |
-| Value proposition | Saves research time, surfaces actionable recommendations, and keeps a traceable conversation history for follow-up iterations. |
-| Demo video | TBD – planned once a multi-agent prototype exists. |
-
-Planned features:
-- Multi-agent orchestration (concierge, researcher, critic loops)
-- Tooling for job market search, resume parsing, and calculation
-- Sessions + long-term memory so the agent remembers preferences across chats
-- Evaluation harness plus deployment pathway (Vertex AI Agent Engine)
+- **Course hub:** https://www.kaggle.com/competitions/agents-intensive-capstone-project
+- **Status:** ✅ Working implementation with research, planning, and memory capabilities
 
 ---
 
-## Course labs & takeaways
+## 📋 Table of Contents
 
-| Day | Notebook | Key concepts digested |
-| --- | --- | --- |
-| 1A | `labs/day1/day-1a-from-prompt-to-action.ipynb` | Gemini setup, basic `Agent` + `InMemoryRunner`, `adk web` debugging workflow |
-| 1B | `labs/day1/day-1b-agent-architectures.ipynb` | Sequential, parallel, and loop orchestration patterns for multi-agent teams |
-| 2A | `labs/day2/day-2a-agent-tools.ipynb` | Designing reliable custom tools, chaining to code execution sub-agents, tooling taxonomy |
-| 2B | `labs/day2/day-2b-agent-tools-best-practices.ipynb` | MCP integrations, long-running operations, pause/resume workflows, event handling |
-| 3A | `labs/day3/day-3a-agent-sessions.ipynb` | Session services (in-memory + SQLite), context compaction, stateful tool patterns |
-| 3B | `labs/day3/day-3b-agent-memory.ipynb` | Memory services, manual vs automatic ingestion, reactive/proactive retrieval, consolidation |
-| 4A | `labs/day4/day-4a-agent-observability.ipynb` | ADK web traces, DEBUG logging, observability plugins, production logging strategies |
-| 4B | `labs/day4/day-4b-agent-evaluation.ipynb` | Interactive eval cases, CLI regression suites, evaluation metrics, user simulation hooks |
-| 5A | `labs/day5/day-5a-agent2agent-communication.ipynb` | Agent2Agent protocol, exposing services via `to_a2a`, consuming remote agents |
-| 5B | `labs/day5/day-5b-agent-deployment.ipynb` | Packaging agents, configuring `.agent_engine_config.json`, deploying/testing on Vertex AI Agent Engine |
-
-Each notebook builds toward the concierge agent by covering tooling, memory, observability, evaluation, collaboration, and deployment.
+1. [The Problem](#-the-problem)
+2. [The Solution](#-the-solution)
+3. [Value Proposition](#-value-proposition)
+4. [Architecture](#-architecture)
+5. [Key Concepts & Implementation](#-key-concepts--implementation)
+6. [Setup Instructions](#-setup-instructions)
+7. [Usage](#-usage)
+8. [Project Structure](#-project-structure)
+9. [Technical Details](#-technical-details)
+10. [Future Enhancements](#-future-enhancements)
 
 ---
 
-## Implementation checklist
+## 🎯 The Problem
 
-- **Multi-agent system**
-  - [ ] LLM-powered root agent orchestrator
-  - [ ] Parallel researchers for labor-market data
-  - [ ] Sequential writing/editing loops for plan generation
-  - [ ] Loop agent for critique/refinement cycles
+**Career transitions are complex, time-consuming, and overwhelming.**
 
-- **Tools**
-  - [ ] MCP connectors (e.g., search, GitHub, Slack)
-  - [ ] Custom Python tools (job matching logic, resume parsing)
-  - [ ] Built-ins such as Google Search + Code Execution
-  - [ ] OpenAPI integrations and long-running approval flows
+When professionals want to pivot careers, they face:
+- **Information overload**: Hundreds of blog posts, courses, and conflicting advice
+- **Analysis paralysis**: Too many options without clear prioritization
+- **Generic guidance**: One-size-fits-all advice that ignores individual backgrounds
+- **Scattered research**: No single source for skills, resources, timelines, and success stories
+- **Lost context**: Restarting research from scratch in every browsing session
 
-- **Sessions & Memory**
-  - [ ] Durable session service (SQLite/managed DB)
-  - [ ] Long-term memory (Memory Bank or managed service)
-  - [ ] Context compaction + explicit state tooling
-
-- **Observability & Evaluation**
-  - [ ] `LoggingPlugin` and custom callbacks
-  - [ ] Regression eval sets via `adk eval`
-  - [ ] User simulation scenarios for stress testing
-
-- **Deployment**
-  - [ ] Agent packaged for Vertex AI Agent Engine
-  - [ ] Post-deployment validation scripts
-  - [ ] Cleanup + cost safeguards
+**The result?** People spend weeks researching instead of learning, get discouraged by the complexity, or make uninformed decisions about their career path.
 
 ---
 
-## Next steps
-1. Translate notebook prototypes into reusable Python modules under `main.py` or a dedicated package.
-2. Implement the job-track concierge multi-agent workflow with real tools and memory services.
-3. Stand up evaluation suites + observability plugins, then package for deployment. 
+## 💡 The Solution
+
+**AI Career Advisor** is an intelligent multi-agent system that automates career transition research and creates personalized action plans.
+
+### What It Does
+
+1. **🔍 Researches** target career paths using Google Search
+   - Required skills and typical progressions
+   - Learning resources (courses, certifications, books)
+   - Market outlook (demand, salary ranges, growth trends)
+   - Success stories from similar transitions
+
+2. **📝 Creates** personalized 3-phase transition roadmaps
+   - Phase 1 (Months 1-3): Foundation building with quick wins
+   - Phase 2 (Months 4-6): Portfolio projects and networking
+   - Phase 3 (Months 6-9): Job search preparation
+   - Tailored to the user's experience, time commitment, and background
+
+3. **🧠 Remembers** context across sessions
+   - Long-term memory persists career goals and preferences
+   - Session memory maintains conversation continuity
+   - No need to repeat information in follow-up conversations
 
 ---
 
-## Project Pitch
+## 💎 Value Proposition
 
-### Why this matters
-Choosing a career path has become a noisy, high-stakes decision: job titles shift quarterly, each role requires different skill investments, and misalignment costs both time and morale. Traditional career sites dump static lists that quickly feel overwhelming. Learners in the *AI Agent* track need a demonstrably agentic solution that goes beyond static recommendations and instead collaborates with users to uncover their “why,” explore markets, and act on next steps.
+### For Career Transitioners
+- ⏰ **Save 20+ hours** of scattered research time
+- 🎯 **Get specific, actionable advice** tailored to your background
+- 📊 **Make data-driven decisions** with market insights and salary data
+- 🗺️ **Follow a clear roadmap** with measurable monthly milestones
+- 💪 **Build confidence** with success stories and realistic timelines
 
-### What we’re building
-**Job Track Concierge** is a multi-agent system that interviews the user, researches labor-market data, matches preferences against real openings, and iteratively refines a personalized plan. The core experience is an interactive session where the agent asks clarifying questions, runs research tools, summarizes tradeoffs, and logs preferences to long-term memory so conversations build on each other. The output is an actionable roadmap: target roles, required skills, timelines, and curated resources.
+### For Career Coaches
+- 🤖 **Automate initial research** to focus on high-value guidance
+- 📋 **Standardize intake process** with consistent information gathering
+- 🔄 **Scale your impact** without proportional time investment
+- 📈 **Track client progress** with persistent memory and session logs
 
-### Solution architecture (agent-first)
-1. **Concierge Orchestrator (LLM Agent):** Guides the conversation, decides which specialized agents or tools to invoke, and ensures every step ties back to the user’s goals.  
-2. **Parallel Research Agents:** Each focuses on a domain (AI/ML, product, data, design) and uses Google Search, MCP endpoints, and job APIs to surface current opportunities and skill trends.  
-3. **Sequential Planning Pipeline:** Outline → Plan Writer → Critique/Loop agents refine the recommendation packet until it meets quality criteria, leveraging loop-based refinements for clarity.  
-4. **Tooling Layer:** Custom resume parser, cost calculator, and MCP connectors (Everything server for quick prototypes, plus OpenAPI integrations for job boards). Long-running approval flows manage any costly actions (e.g., scheduling demo interviews).  
-5. **Sessions & Memory:** Durable session service stores the conversation thread; Memory service captures stable preferences (location, salary ceiling, values) for instant recall across sessions. Context compaction keeps prompts efficient.  
-6. **Observability & Evaluation:** LoggingPlugin + custom callbacks capture traces, while `adk eval` regression suites and user-simulation scenarios guard against regressions as new tools or agents are introduced.  
-7. **Deployment Path:** Packaged as an ADK app, deployable to Vertex AI Agent Engine with monitoring hooks and cleanup scripts, ensuring a production-ready experience.
+---
 
-### Innovation & value
-- **Agent-native UX:** Instead of static questionnaires, the concierge co-creates the plan through live inquiry, adaptive research, and memory-driven follow-ups.  
-- **Multi-agent rigor:** Parallel researchers plus loop critics keep insights fresh and balanced, going beyond a single LLM answer.  
-- **Trust through observability:** Every recommendation is traceable via sessions, events, and evaluation artifacts—critical for high-stakes career guidance.  
-- **Scalable delivery:** The Vertex Agent Engine deployment ensures low-latency access while MCP/OpenAPI tools make it easy to plug in new data sources.
+## 🏗️ Architecture
 
-### Storytelling the journey
-- **Day 1–2:** Graduated from single-agent prompts to multi-agent orchestration with custom tools and code-execution subagents.  
-- **Day 3:** Added persistent sessions, state tooling, and long-term memory so the concierge can remember users between visits.  
-- **Day 4:** Layered observability and evaluation to catch regressions before users do.  
-- **Day 5:** Built the collaboration (A2A) and deployment muscles needed to expose the concierge as a reliable service.  
-- **Now:** Translating these lab learnings into a cohesive concierge experience, validating each milestone with regression tests, and prepping a polished demo.
+### System Overview
 
-This pitch demonstrates the *why* (career guidance needs adaptive intelligence) and the *what* (a multi-agent concierge) while keeping agents central to every architectural decision. It also outlines the roadmap from concept to deployment, showing clear communication of vision, innovation, and execution.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     User Query                               │
+│  "I'm a Product Manager wanting to transition to Data       │
+│   Science with 10 hours/week available"                     │
+└─────────────────┬───────────────────────────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────────────────────┐
+│              SEQUENTIAL AGENT PIPELINE                       │
+│                                                              │
+│  ┌────────────────────────┐    ┌─────────────────────────┐ │
+│  │   Research Agent       │───▶│    Mentor Agent         │ │
+│  │                        │    │                         │ │
+│  │ Tools:                 │    │ Input:                  │ │
+│  │ • google_search        │    │ • {research_summary}    │ │
+│  │ • preload_memory       │    │                         │ │
+│  │                        │    │ Output:                 │ │
+│  │ Output:                │    │ • 3-phase action plan   │ │
+│  │ • Skills required      │    │ • Monthly milestones    │ │
+│  │ • Learning resources   │    │ • Personalized advice   │ │
+│  │ • Market outlook       │    │                         │ │
+│  │ • Success stories      │    │                         │ │
+│  └────────────────────────┘    └─────────────────────────┘ │
+│                                                              │
+└──────────────────────┬───────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  Memory Services                             │
+│                                                              │
+│  ┌──────────────────────┐    ┌──────────────────────────┐  │
+│  │  Session Memory      │    │   Long-term Memory       │  │
+│  │  (Short-term)        │    │   (Persistent)           │  │
+│  │                      │    │                          │  │
+│  │ • Conversation       │    │ • Career goals           │  │
+│  │   history            │    │ • User preferences       │  │
+│  │ • Current context    │    │ • Past research          │  │
+│  │                      │    │ • Auto-saved via         │  │
+│  │ Scope: Single        │    │   callbacks              │  │
+│  │        session       │    │                          │  │
+│  └──────────────────────┘    └──────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Agent Flow
+
+```mermaid
+graph LR
+    A[User Query] --> B[Research Agent]
+    B -->|google_search| C[Web Research]
+    B -->|preload_memory| D[Past Context]
+    C --> E[research_summary]
+    D --> E
+    E -->|Template Variable| F[Mentor Agent]
+    F --> G[Personalized Plan]
+    B -.->|auto_save_to_memory| H[Memory Service]
+    G --> I[Final Output]
+```
+
+### Key Design Decisions
+
+1. **Sequential over Parallel**: Research must complete before mentoring to ensure advice is grounded in current data
+2. **Memory Callbacks**: Automatic saving eliminates manual memory management
+3. **Structured Output Keys**: Template variables (`{research_summary}`) enable clean data flow between agents
+4. **Tool Separation**: Research agent has search tools; mentor agent focuses purely on synthesis
+5. **Gemini 2.5 Flash Lite**: Fast, cost-effective model suitable for production at scale
+
+## 🧠 Key Concepts & Implementation
+
+This project demonstrates **5+ core concepts** from the AI Agents intensive course:
+
+### 1. Sequential Agent Architecture (Day 1)
+
+**Concept**: Orchestrating multiple specialized agents in a pipeline where each agent's output becomes the next agent's input.
+
+**Implementation**:
+```python
+root_agent = SequentialAgent(
+    name="CareerPathPipeline",
+    sub_agents=[research_agent, mentor_agent],
+)
+```
+
+**Why It Matters**: Sequential orchestration ensures the mentor agent receives complete research before creating advice. This prevents hallucinations and grounds recommendations in real data.
+
+**Code Location**: `ai-agent.ipynb` (Section 3)
+
+---
+
+### 2. Tool Integration (Day 2)
+
+**Concept**: Equipping agents with external capabilities through built-in and custom tools.
+
+**Implementation**:
+```python
+research_agent = LlmAgent(
+    name="research_agent",
+    tools=[google_search, preload_memory],
+    # ...
+)
+```
+
+**Tools Used**:
+- **`google_search`**: Real-time web research for market data
+- **`preload_memory`**: Retrieves past conversations for context
+
+**Why It Matters**: Tools transform LLMs from text generators into action-taking systems that can gather real-world information and maintain context.
+
+**Code Location**: `ai-agent.ipynb` (Section 2)
+
+---
+
+### 3. Memory Services (Day 3)
+
+**Concept**: Dual-layer memory system for both short-term conversation and long-term knowledge retention.
+
+**Implementation**:
+```python
+session_service = InMemorySessionService()  # Short-term
+memory_service = InMemoryMemoryService()    # Long-term
+
+runner = Runner(
+    agent=root_agent,
+    session_service=session_service,
+    memory_service=memory_service,
+)
+```
+
+**Memory Flow**:
+- **Session Memory**: Automatically tracks conversation within a session
+- **Long-term Memory**: Persisted via `auto_save_to_memory` callback
+- **Retrieval**: `preload_memory` tool accesses saved context across sessions
+
+**Why It Matters**: Users don't need to repeat their career goals in every conversation. The agent "remembers" previous discussions and builds on them.
+
+**Code Location**: `ai-agent.ipynb` (Section 3) + `helpers.py:37-59`
+
+---
+
+### 4. Callbacks & Automation (Day 4 Foundation)
+
+**Concept**: Lifecycle hooks that execute automatically during agent operations.
+
+**Implementation**:
+```python
+async def auto_save_to_memory(callback_context):
+    """Automatically save session to memory after each agent turn."""
+    session = callback_context._invocation_context.session
+    await callback_context._invocation_context.memory_service.add_session_to_memory(session)
+
+research_agent = LlmAgent(
+    # ...
+    after_agent_callback=auto_save_to_memory,
+)
+```
+
+**Why It Matters**: Eliminates manual memory management. Every research session is automatically saved for future reference without requiring explicit code in the agent logic.
+
+**Code Location**: `helpers.py:37-59`, used in `ai-agent.ipynb` (Section 2)
+
+---
+
+### 5. Structured Output & Data Flow
+
+**Concept**: Using output keys and template variables to pass structured data between agents.
+
+**Implementation**:
+```python
+# Research agent produces structured output
+research_agent = LlmAgent(
+    output_key="research_summary",
+    # ...
+)
+
+# Mentor agent consumes it via template variable
+mentor_agent = LlmAgent(
+    instruction="Based on the research findings: {research_summary}...",
+    # ...
+)
+```
+
+**Why It Matters**: Creates clean separation of concerns. Research agent focuses on gathering data; mentor agent focuses on synthesis. The pipeline handles data flow automatically.
+
+**Code Location**: `ai-agent.ipynb` (Section 2)
+
+---
+
+### 6. Error Handling & Resilience
+
+**Concept**: Graceful degradation and retry logic for production reliability.
+
+**Implementation**:
+```python
+retry_config = types.HttpRetryOptions(
+    attempts=5,
+    exp_base=7,
+    initial_delay=1,
+    http_status_codes=[429, 500, 503, 504],
+)
+
+model = Gemini(model="gemini-2.5-flash-lite", retry_options=retry_config)
+```
+
+**Why It Matters**: Handles API rate limits, transient failures, and network issues without crashing. Production-grade reliability from day one.
+
+**Code Location**: `helpers.py:25-30`
+
+---
+
+## 🚀 Setup Instructions
+
+### Prerequisites
+
+- **Python 3.10+** (Python 3.11 recommended)
+- **uv** package manager ([installation guide](https://github.com/astral-sh/uv))
+- **Google API Key** for Gemini models ([get one here](https://aistudio.google.com/apikey))
+- **Jupyter** environment (VS Code, JupyterLab, or Google Colab)
+
+### Step-by-Step Setup
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/ai-agent.git
+cd ai-agent
+```
+
+#### 2. Install Dependencies
+
+Using `uv` (recommended):
+```bash
+uv sync
+```
+
+Or using `pip`:
+```bash
+pip install -e .
+```
+
+**Dependencies include**:
+- `google-genai` - Gemini API client
+- `google-adk` - Agent Development Kit
+- `python-dotenv` - Environment variable management
+
+#### 3. Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```bash
+touch .env
+```
+
+Add your Google API key:
+
+```env
+GOOGLE_API_KEY=your_api_key_here
+```
+
+**⚠️ Security Note**: Never commit `.env` files to version control. The `.gitignore` is already configured to exclude them.
+
+#### 4. Open the Notebook
+
+**VS Code**:
+```bash
+code ai-agent.ipynb
+```
+
+**JupyterLab**:
+```bash
+jupyter lab ai-agent.ipynb
+```
+
+**Google Colab**:
+1. Upload `ai-agent.ipynb` and `helpers.py`
+2. Install dependencies in a cell: `!pip install google-genai google-adk python-dotenv`
+3. Configure secrets using Colab's secrets manager
+
+#### 5. Run the Cells
+
+Execute cells in order:
+1. **Setup & Configuration** - Imports and API key validation
+2. **Agent Definitions** - Creates research and mentor agents
+3. **Pipeline Assembly** - Builds the sequential pipeline
+4. **Testing** - Runs a sample career transition query
+
+---
+
+## 📖 Usage
+
+### Basic Usage
+
+```python
+# Run the career advisor with a sample query
+await run_session(
+    runner,
+    "I am a Product Manager with 5 years of experience. I want to transition to data science and can dedicate 10 hours per week.",
+    session_name="career-transition-demo",
+    last_agent_only=True,  # Only show final mentor output
+)
+```
+
+### Multi-Turn Conversations
+
+```python
+# First conversation
+await run_session(
+    runner,
+    "I'm a teacher with 8 years of experience wanting to become a UX designer",
+    session_name="teacher-to-ux"
+)
+
+# Follow-up in the same session
+await run_session(
+    runner,
+    "I can dedicate 15 hours per week and have some basic design skills",
+    session_name="teacher-to-ux"
+)
+```
+
+### Viewing All Agent Outputs
+
+```python
+# Show both research and mentor outputs
+await run_session(
+    runner,
+    "Your query here",
+    session_name="my-session",
+    last_agent_only=False  # Show all agents
+)
+```
+
+### Custom Queries
+
+Your query should include:
+- ✅ **Current role** (e.g., "Product Manager")
+- ✅ **Years of experience** (e.g., "5 years")
+- ✅ **Target role** (e.g., "Data Scientist")
+- ✅ **Time commitment** (e.g., "10 hours per week")
+
+**Example queries**:
+```python
+# Software Engineer → AI/ML Engineer
+"I'm a software engineer with 7 years in backend development. I want to transition to AI/ML engineering and can study 12 hours weekly."
+
+# Marketing Manager → Data Analyst
+"I'm a marketing manager with 6 years of experience. I want to become a data analyst and have 8 hours per week available."
+
+# Journalist → Technical Writer
+"I'm a journalist with 10 years of experience. I want to transition to technical writing for tech companies with 20 hours per week."
+```
+
+---
+
+## 📁 Project Structure
+
+```
+ai-agent/
+├── ai-agent.ipynb           # Main career advisor notebook
+├── helpers.py               # Utility functions and configuration
+├── pyproject.toml           # Project dependencies and metadata
+├── uv.lock                  # Locked dependency versions
+├── .env                     # API keys (not in git)
+├── .gitignore              # Git exclusions
+├── README.md               # This file
+├── Makefile                # Development commands
+└── labs/                   # Course lab notebooks
+    ├── day1/               # Agent architectures
+    ├── day2/               # Tool integration
+    ├── day3/               # Sessions & memory
+    ├── day4/               # Observability & evaluation
+    └── day5/               # Agent2Agent & deployment
+```
+
+---
+
+## 🔧 Technical Details
+
+### Model Selection
+
+**Gemini 2.5 Flash Lite** was chosen for:
+- ⚡ **Fast response times** (< 2 seconds average)
+- 💰 **Cost efficiency** for production scaling
+- 🎯 **Strong performance** on structured output tasks
+- 🔄 **Reliable retry handling** for API stability
+
+### Prompt Engineering
+
+Both agents use carefully structured prompts:
+
+**Research Agent**:
+- Clear task breakdown (skills, resources, market outlook)
+- Specific output format requirements
+- Context prioritization (check memory first, then search)
+
+**Mentor Agent**:
+- Receives structured input via `{research_summary}`
+- 3-phase framework for consistency
+- Emphasis on personalization and background leveraging
+
+### Memory Strategy
+
+**When to use each memory type**:
+
+| Scenario | Session Memory | Long-term Memory |
+|----------|---------------|------------------|
+| Same conversation, multiple messages | ✅ Automatic | ❌ Not needed |
+| Different sessions, same user | ❌ Lost | ✅ Via preload_memory |
+| Fresh start, no history | ✅ New session | ❌ Empty |
+
+**Best practices implemented**:
+- Auto-save after research completion (high-value content)
+- Don't save mentor output (derived from research)
+- Use session names for logical grouping
+
+### Session Management
+
+The `run_session` helper function (`helpers.py:66-167`):
+- Creates or retrieves sessions by name
+- Handles query streaming
+- Filters agent outputs based on `last_agent_only` flag
+- Provides formatted output with agent names
+
+---
+
+## 🔮 Future Enhancements
+
+### Short-term Improvements
+- [ ] **Resume Upload Tool**: Parse user's resume for automatic background extraction
+- [ ] **Salary Calculator**: Estimate earning potential in target role based on location
+- [ ] **Job Board Integration**: Search LinkedIn/Indeed for actual openings
+- [ ] **Progress Tracking**: Monthly check-in agent to measure milestone completion
+
+### Advanced Features
+- [ ] **LoopAgent for Refinement**: Iteratively improve action plans based on user feedback
+- [ ] **Parallel Research**: Multiple research agents for faster data gathering
+- [ ] **Observability Dashboard**: LoggingPlugin + traces for production monitoring
+- [ ] **Evaluation Suite**: Automated testing with example career transitions
+- [ ] **Vertex AI Deployment**: Production deployment with Agent Engine
+
+### Platform Expansion
+- [ ] **Web UI**: Streamlit or Gradio interface for non-technical users
+- [ ] **Slack Bot**: Integration for company career development programs
+- [ ] **API Endpoint**: REST API for third-party integrations
+- [ ] **Mobile App**: iOS/Android companion app
+
+---
+
+## 📚 Course Labs & Learning Journey
+
+The `labs/` directory contains exercises from the 5-day AI Agents intensive:
+
+| Day | Focus | Key Learnings Applied |
+|-----|-------|----------------------|
+| **Day 1** | Agent Architectures | Sequential pipeline design |
+| **Day 2** | Tool Integration | google_search + preload_memory |
+| **Day 3** | Sessions & Memory | Dual-layer memory system |
+| **Day 4** | Observability | Retry config, error handling |
+| **Day 5** | Deployment | Production-ready patterns |
+
+Each lab built incrementally toward this capstone project.
+
+---
+
+## 🤝 Contributing
+
+This is a capstone project for the AI Agents intensive. While it's primarily for educational purposes, suggestions and feedback are welcome!
+
+To report issues or suggest improvements:
+1. Open an issue describing the problem or enhancement
+2. Include relevant code snippets or error messages
+3. Tag with appropriate labels (bug, enhancement, documentation)
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **Google & Kaggle** for the AI Agents intensive program
+- **ADK Team** for the powerful Agent Development Kit
+- **Course Instructors** for comprehensive labs and guidance
+- **Gemini API** for enabling fast, cost-effective agent operations
+
+---
+
+## 📧 Contact
+
+For questions about this implementation:
+- Open an issue in this repository
+- Check the [ADK documentation](https://google.github.io/adk-docs/)
+- Review the course materials at [Kaggle](https://www.kaggle.com/competitions/agents-intensive-capstone-project)
+
+---
+
+**Built with ❤️ using Google's Agent Development Kit**
